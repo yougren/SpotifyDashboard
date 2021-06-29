@@ -1,8 +1,8 @@
 //module for handling API requests
 //methods enclosed so as to not expose functions to client
 const APIController = (function() {
-    const clientID = '89247e83261f472c8274fdab8383ba3a';
-    const clientSecret = '58d58378972a46009113053917591ff8';
+    const clientID = '';
+    const clientSecret = '';
     const BASE_URL = "https://api.spotify.com/v1";
     const _getToken = async () => {
         const result = await fetch("https://accounts.spotify.com/api/token", {
