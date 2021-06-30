@@ -32,6 +32,7 @@ body{
     padding: 10px;
     grid-column: 1;
     grid-row: 1;
+    
 }
 #seed_container{
     grid-column: 2;
@@ -40,6 +41,8 @@ body{
 #search_results, #current_seed_elements{
     max-height: 100%;
     overflow: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--secondary_bg_color) var(--primary_bg_color);
 }
 
 button{
@@ -115,6 +118,8 @@ button{
     grid-auto-columns: 40px;
     overflow-x: scroll;
     overflow-y: hidden;
+    scrollbar-width: thin;
+    scrollbar-color: var(--green_blue) var(--primary_bg_color);
 }
 
 .itemContainerV{
@@ -126,6 +131,7 @@ button{
 .itemContainerV > img{
     width: 100%;
     height: auto;
+    max-height: 180px;
     transition-duration: 0.1s;
 }
 .itemContainerV > button{
@@ -145,6 +151,9 @@ p{
     white-space: nowrap;
     text-overflow: ellipsis;
     margin: 5px;
+    color: white;
+    font-weight: bold;
+    font-size: xx-large;
 }
 
 .title{
@@ -155,4 +164,12 @@ p{
 .artist{
     font-size: medium;
     color: var(--offwhite);
+}
+
+.category{
+    margin-top: 40px;
+}
+
+p.name{
+    height: 50px;
 }

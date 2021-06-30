@@ -1,8 +1,8 @@
 //module for handling API requests
 //methods enclosed so as to not expose functions to client
 const APIController = (function() {
-    const clientID = '';
-    const clientSecret = '';
+    const clientID = "89247e83261f472c8274fdab8383ba3a";
+    const clientSecret = "60526b1276d64078b52d73295dfc554f";
     const BASE_URL = "https://api.spotify.com/v1";
     const _getToken = async () => {
         const result = await fetch("https://accounts.spotify.com/api/token", {
@@ -85,11 +85,14 @@ const UIController = (function() {
         },
         
         addHorizontalList(container, name){
+            //insert capitzlied category name along with div for containing search results under that category
             const html =
             `
-            <p class="name">${name}</p>
-            <div id="${name}List" class="resultList">
-                
+            <div class='category'>
+                <p class="name">${name.charAt(0).toUpperCase() + name.slice(1)}</p>
+                <div id="${name}List" class="resultList">
+                    
+                </div>
             </div>
             `;
 
@@ -97,13 +100,30 @@ const UIController = (function() {
         },
 
         //adds a SINGLE track to search results list from spotify search response
-        createTrackResult(result){
+        createResult(result, type){
+            var uri = result.uri;
+            var imgString = "";
+            var titleString = result.name;
+            var artistString = "";
+
+            if (type === 'albums' || type === 'artists' || type === 'playlists'){
+                if(result.images[0]) imgString = result.images[0].url;
+                if(type === 'playlists') artistString = result.owner.id;
+            }
+            else if(type === 'tracks'){
+                imgString = result.album.images[0].url;
+            }
+
+            if (type === 'albums' || type === 'tracks'){
+                if(result.artists) artistString = result.artists[0].name;
+            }
+            
             const html = 
             `
-            <div class="itemContainerV" value="${result.uri}">
-                <img src="${result.album.images[0].url}">
-                <p class='title'>${result.name}</p>
-                <p class='artist'>${result.artists[0].name}</p>
+            <div class="itemContainerV" value="${uri}">
+                <img src="${imgString}">
+                <p class='title'>${titleString}</p>
+                <p class='artist'>${artistString}</p>
                 <button class='resultAddBTN'>+</button>
             </div>
             `;
@@ -113,18 +133,17 @@ const UIController = (function() {
             const htmlFuture = 
             `
             <div class="itemContainerW">
-                <input type="hidden" class="item_uri" value="${result.uri}">
-                <img src="${result.album.images[0].url}">
-                <p class='title'>${result.name}</p>
-                <p class='artist'>${result.artists[0].name}</p>
+                <input type="hidden" class="item_uri" value="${uri}">
+                <img src="${imgString}">
+                <p class='title'>${titleString}</p>
+                <p class='artist'>${artistString}</p>
                 <button class='itemRemoveBTN'>-</button>
             </div>
             `;
 
-            $('#tracksList').append(html);
+            $(`#${type}List`).append(html);
             $(DOMElements.resultAddBTNs).last().click((e) => {
                 $('#current_seed_elements').append(htmlFuture);
-                console.log("???")
                 $(DOMElements.itemRemoveBTNs).last().click((e) => {
                     //obviously the cleanest way of removing the parent node
                     e.target.parentNode.parentNode.removeChild(e.target.parentNode);
@@ -176,22 +195,19 @@ const APPController = (function(UICtrl, APICtrl) {
                 if(searchResults.hasOwnProperty(key)){
                     UICtrl.addHorizontalList($(DOMInputs.searchResults), key);
                     
-                    switch (key){
-                        case 'tracks':
-                            searchResults[key].items.forEach(result => UICtrl.createTrackResult(result));
-                    }
+                    searchResults[key].items.forEach(result => UICtrl.createResult(result, key)); 
                 }
             }
             
         }
     });
 
-    $(DOMInputs.items).click( async (e) => {
-        const token = UICtrl.getToken.token;
-        const playbackStatus = await APICtrl.playback(token, $(this).val());
+    // $(DOMInputs.items).click( async (e) => {
+    //     const token = UICtrl.getToken.token;
+    //     const playbackStatus = await APICtrl.playback(token, $(this).val());
 
-        console.log(playbackStatus);
-    });
+    //     console.log(playbackStatus);
+    // });
     return{
         init(){
             _init();
