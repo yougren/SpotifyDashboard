@@ -6,6 +6,9 @@
     --offwhite: #daebf0;
     --spotify_green: #0fdb42;
 }
+
+/* index.html */
+
 body{
     font-family: 'Roboto', sans-serif;
     font-size: larger;
@@ -52,9 +55,13 @@ button{
     border: none;
     text-align: center;
     transition-duration: 0.1s;
-    border-radius: 3px;
+    border-radius: 5px;
 }
 
+button:hover{
+    cursor: pointer;
+    color: var(--spotify_green);
+}
 .itemContainerW{
     height: 100px;
     width: 700px;
@@ -146,7 +153,7 @@ button{
 
 p{
     margin: 0px;
-    height: 20px;
+    height: 50px;
     overflow-x: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -172,4 +179,41 @@ p{
 
 p.name{
     height: 50px;
+}
+
+#submitSeedBTN{
+    font-size: xx-large;
+    background-color: var(--secondary_bg_color);
+    visibility: hidden;
+}
+
+#new_seed_btn{
+    font-size: 64px;
+}
+
+/* home.html */
+
+.modal{
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.4);
+}
+
+.modal_content{
+    background-color: var(--secondary_bg_color);
+    margin: 20% auto;
+    padding: 20px;
+    border: 2px solid var(--primary_bg_color);
+    border-radius: 5px;
+    width: 10%;
+    text-align: center;
+}
+
+#name_form > input{
+    margin: 10px;
 }

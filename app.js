@@ -4,6 +4,7 @@ const APIController = (function() {
     const clientID = "";
     const clientSecret = "";
     const BASE_URL = "https://api.spotify.com/v1";
+
     const _getToken = async () => {
         const result = await fetch("https://accounts.spotify.com/api/token", {
             method: 'POST',
@@ -20,7 +21,7 @@ const APIController = (function() {
     }
 
     const _search = async (token, query, type="track,artist,album,playlist") => {
-        const result = await fetch(`https://api.spotify.com/v1/search?q=${query}&type=${type}`, {
+        const result = await fetch(BASE_URL + `/search?q=${query}&type=${type}`, {
             method: "GET",
             headers: {
                 'Authorization': "Bearer " + token
@@ -68,7 +69,9 @@ const UIController = (function() {
         results: '#search_results',
         resultAddBTNs: '.resultAddBTN',
         itemRemoveBTNs: '.itemRemoveBTN',
-        items: '.itemContainer'
+        items: '.itemContainer',
+        submit: '#submitSeedBTN',
+        seedItems: '#current_seed_elements'
     }
 
     return{
@@ -80,7 +83,9 @@ const UIController = (function() {
                 searchResults: $(DOMElements.results),
                 addBTNs: $(DOMElements.resultAddBTNs),
                 removeBTNs: $(DOMElements.itemRemoveBTNs),
-                resultItems: $(DOMElements.items)
+                resultItems: $(DOMElements.items),
+                submitBTN: $(DOMElements.submit),
+                seedItems: $(DOMElements.seedItems)
             }
         },
         
@@ -202,6 +207,36 @@ const APPController = (function(UICtrl, APICtrl) {
         }
     });
 
+    var mObserver = new MutationObserver( (mutations) => {
+        mutations.forEach( (mutation) => {
+            if(mutation.type === 'childList'){
+                if(mutation.target.children.length > 0){
+                    $(DOMInputs.submitBTN).css('visibility', 'visible');
+                    $('#empty_seed_list_prompt').css('visibility', 'hidden');
+                }
+                else if(mutation.target.children.length == 0){
+                    $(DOMInputs.submitBTN).css('visibility', 'hidden');
+                    $('#empty_seed_list_prompt').css('visibility', 'visible');
+                }
+            }
+        });
+    });
+
+    if($(DOMInputs.seedItems).get(0))
+        mObserver.observe($(DOMInputs.seedItems).get(0), {childList: true});
+
+    $(DOMInputs.submitBTN).click( () => {
+        console.log("TODO");
+    });
+
+    $('#new_seed_btn').click( () => {
+        $('#name_seed_modal').css('display', 'block');
+    });
+
+    $('#start_create_btn').click( () => {
+        $('#name_seed_modal').css('display', 'none');
+        window.location.href = "index.html";
+    });
     // $(DOMInputs.items).click( async (e) => {
     //     const token = UICtrl.getToken.token;
     //     const playbackStatus = await APICtrl.playback(token, $(this).val());

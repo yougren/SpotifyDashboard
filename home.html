@@ -1,42 +1,33 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Creating seed...</title>
+    <title>Dashboard</title>
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet"> 
 </head>
 <body>
-    <div id="container_grid">
-        <div id="search_container">
-            <form>
-                <input type="hidden" id="hidden_token">
-                <input id="search_bar" placeholder="Artists, tracks, albums ..." type="text">
-            </form>
-
-            <div id="search_results">
-
-            </div>
-        </div>
-
-        <div id="seed_container">
-            <button id="submitSeedBTN">Create</button>
-            <p id="empty_seed_list_prompt">Add items here using the search bar on the left ...</p>
-            <div id="current_seed_elements">
-
-            </div>
-        </div>
-        
+    <div id="seed_list">
+        Seeds
     </div>
 
-    
-    
+    <div id="name_seed_modal" class="modal">
+        <div class="modal_content">
+            <form id="name_form">
+                <input type="text" placeholder="Name"> <br>
+                <input type="text" placeholder="Description"> <br>
+                <input id="start_create_btn" type="button" value="Start Creating">
+            </form>
+        </div>
+
+    </div>
+    <button id="new_seed_btn">+</button>
 </body>
+
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script type="text/javascript" src="app.js"></script>
 </html>
