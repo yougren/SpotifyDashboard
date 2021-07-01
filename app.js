@@ -226,17 +226,11 @@ const APPController = (function(UICtrl, APICtrl) {
         mObserver.observe($(DOMInputs.seedItems).get(0), {childList: true});
 
     $(DOMInputs.submitBTN).click( () => {
-        console.log("TODO");
+        localStorage.setItem("newSeedItems", $(DOMInputs.seedItems).prop('outerHTML'));
+        window.location.href = "home.html" + '#' + window.location.hash.substring(1);
     });
 
-    $('#new_seed_btn').click( () => {
-        $('#name_seed_modal').css('display', 'block');
-    });
-
-    $('#start_create_btn').click( () => {
-        $('#name_seed_modal').css('display', 'none');
-        window.location.href = "index.html";
-    });
+    
     // $(DOMInputs.items).click( async (e) => {
     //     const token = UICtrl.getToken.token;
     //     const playbackStatus = await APICtrl.playback(token, $(this).val());
@@ -251,3 +245,9 @@ const APPController = (function(UICtrl, APICtrl) {
 })(UIController, APIController);
 
 APPController.init();
+
+$(document).ready( () => {
+    var seedName = window.location.hash.substring(1);
+
+    $('#seed_container').prepend(`<p>${seedName}</p>`);
+ });

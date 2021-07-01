@@ -33,9 +33,9 @@ body{
 }
 #search_container{
     padding: 10px;
+    margin-bottom: 20px;
     grid-column: 1;
     grid-row: 1;
-    
 }
 #seed_container{
     grid-column: 2;
@@ -44,6 +44,7 @@ body{
 #search_results, #current_seed_elements{
     max-height: 100%;
     overflow: auto;
+    margin-top: 20px;
     scrollbar-width: thin;
     scrollbar-color: var(--secondary_bg_color) var(--primary_bg_color);
 }
@@ -127,6 +128,10 @@ button:hover{
     overflow-y: hidden;
     scrollbar-width: thin;
     scrollbar-color: var(--green_blue) var(--primary_bg_color);
+}
+
+.seed{
+    grid-template-columns: repeat(5, 250px);
 }
 
 .itemContainerV{
@@ -216,4 +221,10 @@ p.name{
 
 #name_form > input{
     margin: 10px;
+}
+
+.seed > img{
+    height: 100%;
+    width: auto;
+    overflow: hidden;
 }
