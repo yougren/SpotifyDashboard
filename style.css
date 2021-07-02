@@ -130,10 +130,6 @@ button:hover{
     scrollbar-color: var(--green_blue) var(--primary_bg_color);
 }
 
-.seed{
-    grid-template-columns: repeat(5, 250px);
-}
-
 .itemContainerV{
     background-color: var(--secondary_bg_color);
     padding: 5px;
@@ -223,8 +219,27 @@ p.name{
     margin: 10px;
 }
 
+.seed{
+    display: grid;
+    grid-template-columns: 100px 100px;
+    grid-template-rows: 50px 100px 100px;
+    width: 201px;
+    padding: 10px;
+    border-radius: 7px;
+    transition-duration: 0.2s;
+}
+
 .seed > img{
     height: 100%;
     width: auto;
     overflow: hidden;
+}
+
+.seed_name{
+    grid-column: 1/3;
+}
+
+.seed:hover{
+    cursor: pointer;
+    background-color: var(--secondary_bg_color);
 }

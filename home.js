@@ -15,12 +15,13 @@ if(window.location.hash){
     var seedName = window.location.hash.substring(1); 
     var newSeed = 
     `
-    <p>${seedName}</p>
-    <div id='seed${seedName}' class='seed resultList'>
+    
+    <div id='seed${seedName}' class='seed'>
+    <p class='seed_name'>${seedName}</p>
     </div>
     `;
     $('#seed_list').append(newSeed)
 
     var seedHTML = $.parseHTML(items);
-    $(seedHTML).find('img').toArray().forEach(image => $(`#seed${seedName}`).append(image));
+    $(seedHTML).find('img').toArray().slice(0,4).forEach(image => $(`#seed${seedName}`).append(image));
 }
