@@ -9,19 +9,20 @@ $('#start_create_btn').click( () => {
     window.location.href = "index.html" + '#' + seedName;
 });
 
-var items = localStorage.getItem("newSeedItems");
+var items = JSON.parse(localStorage.getItem("seeds"));
+console.log(items)
 
-if(window.location.hash){
-    var seedName = window.location.hash.substring(1); 
+for(var i = 0; i < items["items"].length; i++){
+    var item = items["items"][i];
+
     var newSeed = 
     `
-    
-    <div id='seed${seedName}' class='seed'>
-    <p class='seed_name'>${seedName}</p>
+    <div id='seed${item.name}' class='seed'>
+    <p class='seed_name'>${item.name}</p>
     </div>
     `;
     $('#seed_list').append(newSeed)
 
-    var seedHTML = $.parseHTML(items);
-    $(seedHTML).find('img').toArray().slice(0,4).forEach(image => $(`#seed${seedName}`).append(image));
+    var seedHTML = $.parseHTML(item.html);
+    $(seedHTML).find('img').toArray().slice(0,4).forEach(image => $(`#seed${item.name}`).append(image));
 }

@@ -226,8 +226,17 @@ const APPController = (function(UICtrl, APICtrl) {
         mObserver.observe($(DOMInputs.seedItems).get(0), {childList: true});
 
     $(DOMInputs.submitBTN).click( () => {
-        localStorage.setItem("newSeedItems", $(DOMInputs.seedItems).prop('outerHTML'));
-        window.location.href = "home.html" + '#' + window.location.hash.substring(1);
+        var items = localStorage.getItem("seeds");
+        if(!items) items = '{"items": []}';
+        var newItem = {
+            name: window.location.hash.substring(1),
+            html: $(DOMInputs.seedItems).prop('outerHTML')
+        }
+        console.log(JSON.stringify(items));
+        var itemsJson = JSON.parse(items);
+        itemsJson["items"].push(newItem);
+        localStorage.setItem("seeds", JSON.stringify(itemsJson));
+        window.location.href = "home.html";
     });
 
     

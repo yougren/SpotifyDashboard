@@ -126,8 +126,7 @@ button:hover{
     grid-auto-columns: 40px;
     overflow-x: scroll;
     overflow-y: hidden;
-    scrollbar-width: thin;
-    scrollbar-color: var(--green_blue) var(--primary_bg_color);
+    
 }
 
 .itemContainerV{
@@ -242,4 +241,12 @@ p.name{
 .seed:hover{
     cursor: pointer;
     background-color: var(--secondary_bg_color);
+}
+
+#seed_list{
+    height: 600px;
+    width: 250px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--green_blue) var(--primary_bg_color);
 }
