@@ -226,16 +226,28 @@ const APPController = (function(UICtrl, APICtrl) {
         mObserver.observe($(DOMInputs.seedItems).get(0), {childList: true});
 
     $(DOMInputs.submitBTN).click( () => {
+        //items is a JSON obj with an array of items
+        //each items has a name and some html
         var items = localStorage.getItem("seeds");
         if(!items) items = '{"items": []}';
+        
+        //get list of images sources and spotify URIs by getting an array of DOM elements and using map to get an array of desired attributes
+        const images = DOMInputs.seedItems.find("img").toArray().map(x => x.getAttribute("src"));
+        const uris = DOMInputs.seedItems.find(".item_uri").toArray().map(x => x.getAttribute("value"));
+        
         var newItem = {
             name: window.location.hash.substring(1),
-            html: $(DOMInputs.seedItems).prop('outerHTML')
+            images: images,
+            uris: uris
         }
-        console.log(JSON.stringify(items));
+        
+        //convert string to json
         var itemsJson = JSON.parse(items);
+        //add new item to items array in the JSON object
         itemsJson["items"].push(newItem);
+        //update locally stored seeds to new JSON string
         localStorage.setItem("seeds", JSON.stringify(itemsJson));
+        //redirect back home
         window.location.href = "home.html";
     });
 
@@ -256,7 +268,8 @@ const APPController = (function(UICtrl, APICtrl) {
 APPController.init();
 
 $(document).ready( () => {
+    //get current seed name from url
     var seedName = window.location.hash.substring(1);
-
+    //add name as <p> tag
     $('#seed_container').prepend(`<p>${seedName}</p>`);
  });

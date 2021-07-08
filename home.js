@@ -1,7 +1,14 @@
+//display modal on button click
 $('#new_seed_btn').click( () => {
     $('#name_seed_modal').css('display', 'block');
 });
-
+//hide modal on screen click (modal takes up whole screen)
+$('#name_seed_modal').click( (e) => {
+    if(e.target.className == 'modal'){
+        $(e.target).hide();
+    }
+});
+//hide modal on create, send seed name to seed creation page
 $('#start_create_btn').click( () => {
     $('#name_seed_modal').css('display', 'none');
     var seedName = $('#new_seed_name').val();
@@ -9,8 +16,8 @@ $('#start_create_btn').click( () => {
     window.location.href = "index.html" + '#' + seedName;
 });
 
+//convert locally stored seeds (strings) to json
 var items = JSON.parse(localStorage.getItem("seeds"));
-console.log(items)
 
 for(var i = 0; i < items["items"].length; i++){
     var item = items["items"][i];
@@ -21,8 +28,9 @@ for(var i = 0; i < items["items"].length; i++){
     <p class='seed_name'>${item.name}</p>
     </div>
     `;
+    
     $('#seed_list').append(newSeed)
 
-    var seedHTML = $.parseHTML(item.html);
-    $(seedHTML).find('img').toArray().slice(0,4).forEach(image => $(`#seed${item.name}`).append(image));
+    item.images.forEach(src => $(`#seed${item.name}`).append(`<img src='${src}'>`));
+    item.uris.forEach(uri => $(`#seed${item.name}`).append(`<input type="hidden" name="uri" value='${uri}'>`));
 }
