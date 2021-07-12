@@ -33,7 +33,7 @@ const APIController = (function() {
     }
 
     const _playback = async (token, uri) => {
-        const result = await fetch(BASE_URL + "/player/play", {
+        const result = await fetch(BASE_URL + "/me/player/play", {
             method: 'PUT',
             headers: {
                 'Authorization': "Bearer " + token
@@ -47,6 +47,23 @@ const APIController = (function() {
         return data;
     }
 
+    const _getRecommendations = async (artists = null, genres= null, tracks=null) => {
+        const queryString = "?";
+        if(artists) queryString += `seed_artists=${artists}&`;
+        if(genres) queryString += `seed_genres=${genres}&`;
+        if(tracks) queryString += `seed_tracks=${tracks}&`;
+        
+        const result = await fetch(BASE_URL + "/recommendations" + queryString, {
+            method: 'GET',
+            headers: {
+                'Authorization': 'Bearer ' + token
+            }
+        });  
+        
+        const data = await result.json();
+        return data;
+    }
+
     return {
         getToken(){
             return _getToken();
@@ -56,6 +73,9 @@ const APIController = (function() {
         },
         playback(token, uri){
             return _playback(token, uri);
+        },
+        getRecommendations(){
+            return _getRecommendations();
         }
     }
 })();
@@ -67,9 +87,10 @@ const UIController = (function() {
         hToken: '#hidden_token',
         searchBar: '#search_bar',
         results: '#search_results',
+        resultItems: '.resultList',
         resultAddBTNs: '.resultAddBTN',
         itemRemoveBTNs: '.itemRemoveBTN',
-        items: '.itemContainer',
+        items: '.itemContainerV',
         submit: '#submitSeedBTN',
         seedItems: '#current_seed_elements'
     }
@@ -81,6 +102,7 @@ const UIController = (function() {
             return{
                 searchQuery: $(DOMElements.searchBar),
                 searchResults: $(DOMElements.results),
+                resultItems: $(DOMElements.resultItems),
                 addBTNs: $(DOMElements.resultAddBTNs),
                 removeBTNs: $(DOMElements.itemRemoveBTNs),
                 resultItems: $(DOMElements.items),
@@ -89,7 +111,16 @@ const UIController = (function() {
             }
         },
         
-        addHorizontalList(container, name){
+        addHorizontalList(container, name, onClick){
+            //observer for detecting children added to category, and giving each a click handler
+            var searchObserver = new MutationObserver( mutations => {
+                mutations.forEach(mutation => {
+                    if(mutation.type == 'childList'){
+                        //jank jQuery to add on click listener
+                        $($(mutation.addedNodes).get(1)).click(onClick);
+                    }
+                });
+            });
             //insert capitzlied category name along with div for containing search results under that category
             const html =
             `
@@ -102,11 +133,14 @@ const UIController = (function() {
             `;
 
             container.append(html);
+            //observe most recently added category for added children
+            searchObserver.observe($(DOMElements.resultItems).last().get(0), {childList: true});
         },
 
         //adds a SINGLE track to search results list from spotify search response
         createResult(result, type){
             var uri = result.uri;
+            var id = result.id;
             var imgString = "";
             var titleString = result.name;
             var artistString = "";
@@ -126,7 +160,7 @@ const UIController = (function() {
             const html = 
             `
             <div class="itemContainerV" value="${uri}">
-                <img src="${imgString}">
+                <img src="${imgString}" value="${uri}">
                 <p class='title'>${titleString}</p>
                 <p class='artist'>${artistString}</p>
                 <button class='resultAddBTN'>+</button>
@@ -139,6 +173,7 @@ const UIController = (function() {
             `
             <div class="itemContainerW">
                 <input type="hidden" class="item_uri" value="${uri}">
+                <input type="hidden" class="item_id" value="${id}">
                 <img src="${imgString}">
                 <p class='title'>${titleString}</p>
                 <p class='artist'>${artistString}</p>
@@ -175,13 +210,18 @@ const APPController = (function(UICtrl, APICtrl) {
     const DOMInputs = UICtrl.inputs();
 
     const _init = async () => {
-        
         const token = await APICtrl.getToken();
         UICtrl.storeToken(token);
     }
     
     var lastTime = 0;
 
+    var onSearchResultClicked = function(e){
+        //if user clicks on image
+        if(e.target.tagName === "IMG"){
+            APICtrl.playback(UICtrl.getToken.token, e.target.getAttribute("value"));
+        }
+    }
     //event triggers whenever the search query changes, polls at fixed time intervals
     $(DOMInputs.searchQuery).on('change keyup input', async() => {
         //first check if it's been a second since last update
@@ -198,8 +238,9 @@ const APPController = (function(UICtrl, APICtrl) {
 
             for(var key in searchResults){
                 if(searchResults.hasOwnProperty(key)){
-                    UICtrl.addHorizontalList($(DOMInputs.searchResults), key);
-                    
+                    //create container for category (track, artist, etc..)
+                    UICtrl.addHorizontalList($(DOMInputs.searchResults), key, onSearchResultClicked);
+                    //add search result to corresponding category
                     searchResults[key].items.forEach(result => UICtrl.createResult(result, key)); 
                 }
             }
@@ -234,11 +275,13 @@ const APPController = (function(UICtrl, APICtrl) {
         //get list of images sources and spotify URIs by getting an array of DOM elements and using map to get an array of desired attributes
         const images = DOMInputs.seedItems.find("img").toArray().map(x => x.getAttribute("src"));
         const uris = DOMInputs.seedItems.find(".item_uri").toArray().map(x => x.getAttribute("value"));
-        
+        const ids = DOMInputs.seedItems.find(".item_id").toArray().map(x => x.getAttribute("value"));
+
         var newItem = {
             name: window.location.hash.substring(1),
             images: images,
-            uris: uris
+            uris: uris,
+            ids: ids
         }
         
         //convert string to json
@@ -251,7 +294,6 @@ const APPController = (function(UICtrl, APICtrl) {
         window.location.href = "home.html";
     });
 
-    
     // $(DOMInputs.items).click( async (e) => {
     //     const token = UICtrl.getToken.token;
     //     const playbackStatus = await APICtrl.playback(token, $(this).val());

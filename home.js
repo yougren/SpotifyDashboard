@@ -33,4 +33,5 @@ for(var i = 0; i < items["items"].length; i++){
 
     item.images.forEach(src => $(`#seed${item.name}`).append(`<img src='${src}'>`));
     item.uris.forEach(uri => $(`#seed${item.name}`).append(`<input type="hidden" name="uri" value='${uri}'>`));
+    item.ids.forEach(id => $(`#seed${item.id}`).append(`<input type="hidden" name="id" value='${id}'>`));
 }
