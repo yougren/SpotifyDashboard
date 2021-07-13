@@ -1,0 +1,22 @@
+{
+  "name": "spotifydashboard",
+  "version": "1.0.0",
+  "description": "something something description",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yougren/SpotifyDashboard.git"
+  },
+  "author": "Eugene Munblit",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/yougren/SpotifyDashboard/issues"
+  },
+  "homepage": "https://github.com/yougren/SpotifyDashboard#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
